@@ -36,14 +36,31 @@ const StudentList = () => {
   };
 
   return (
-    <div>
-      <h2>{editing ? "Edit Student" : "Add Student"}</h2>
-      <StudentForm onSubmit={handleCreate} initialData={editing || undefined} />
-      <h2>All Students</h2>
-      {students.map((s) => (
-        <StudentItem key={s._id} student={s} onEdit={handleEdit} onDelete={handleDelete} />
-      ))}
-    </div>
+    <section id="students" className="space-y-8">
+      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 className="mb-4 text-lg font-semibold">{editing ? "Edit Student" : "Add Student"}</h2>
+        <StudentForm onSubmit={handleCreate} initialData={editing || undefined} />
+      </div>
+
+      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold">All Students</h2>
+          <span className="text-sm text-gray-500">{students.length} total</span>
+        </div>
+
+        {students.length === 0 ? (
+          <div className="grid place-items-center rounded-lg border border-dashed border-gray-300 p-10 text-center text-gray-500">
+            No students yet. Add your first student above.
+          </div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {students.map((s) => (
+              <StudentItem key={s._id} student={s} onEdit={handleEdit} onDelete={handleDelete} />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
   );
 };
 
