@@ -8,9 +8,18 @@ const StudentList = () => {
   const [editing, setEditing] = useState<any | null>(null);
 
   const fetchStudents = async () => {
+  try {
     const res = await getStudents();
-    setStudents(res.data);
-  };
+    if (Array.isArray(res.data)) {
+      setStudents(res.data);
+    } else {
+      console.error("Invalid data", res.data);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 
   useEffect(() => {
     fetchStudents();
