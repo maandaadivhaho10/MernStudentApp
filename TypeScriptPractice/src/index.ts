@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
 import studentRoutes from "./routes/studentRoutes";
+import authRoutes from "./routes/authRoutes";
 import cors from "cors";
 
 
@@ -19,6 +20,8 @@ connectDB();
 
 // Routes
 app.use("/students", studentRoutes);
+
+app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
