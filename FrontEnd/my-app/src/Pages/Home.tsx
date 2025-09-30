@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import StudentList from "../components/StudentList";
 
 const Home = () => {
@@ -6,12 +7,20 @@ const Home = () => {
       <header className="sticky top-0 z-10 bg-white/80 backdrop-blur border-b border-gray-200">
         <div className="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold tracking-tight">Student CRUD App</h1>
-          <a
-            className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white shadow hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            href="#students"
-          >
-            View Students
-          </a>
+          <div className="flex gap-2">
+            <a
+              className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white shadow hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              href="#students"
+            >
+              View Students
+            </a>
+            <Link
+              className="inline-flex items-center gap-2 rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white shadow hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500"
+              to="/logout"
+            >
+              Logout
+            </Link>
+          </div>
         </div>
       </header>
 
