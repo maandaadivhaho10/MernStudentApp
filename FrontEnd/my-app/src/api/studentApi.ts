@@ -1,9 +1,8 @@
-import axios from "axios";
+// api/students.ts
+import api from "./axios";
 
-const API_URL = "https://mernstudentapp-1.onrender.com/students";
-
-export const getStudents = () => axios.get(API_URL);
-export const getStudent = (id: string) => axios.get(`${API_URL}/${id}`);
-export const createStudent = (data: any) => axios.post(API_URL, data);
-export const updateStudent = (id: string, data: any) => axios.put(`${API_URL}/${id}`, data);
-export const deleteStudent = (id: string) => axios.delete(`${API_URL}/${id}`);
+export const getStudents = () => api.get("/students");
+export const getStudent = (id: string) => api.get(`/students/${id}`);
+export const createStudent = (data: any) => api.post("/students", data);
+export const updateStudent = (id: string, data: any) => api.put(`/students/${id}`, data);
+export const deleteStudent = (id: string) => api.delete(`/students/${id}`);
