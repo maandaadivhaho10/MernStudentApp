@@ -19,7 +19,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
 
  login: async (email, password) => {
-  const res = await axios.post<LoginResponse>("http://localhost:5000/api/auth/login", { email, password });
+  const res = await axios.post<LoginResponse>("https://mernstudentapp-1.onrender.com/api/auth/login", { email, password });
   const { token, name, email: userEmail } = res.data;
 
   localStorage.setItem("token", token);
@@ -28,7 +28,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 ,
 
   register: async (name, email, password) => {
-    const res = await axios.post<LoginResponse>("http://localhost:5000/api/auth/register", { name, email, password });
+    const res = await axios.post<LoginResponse>("https://mernstudentapp-1.onrender.com/api/auth/register", { name, email, password });
     const { token, name: userName, email: userEmail } = res.data;
 
     localStorage.setItem("token", token);

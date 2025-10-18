@@ -17,7 +17,7 @@ const ResetPasswordPage = () => {
     try {
 
       const res = await axios.post<{ message: string }>(
-  "http://localhost:5000/api/auth/reset-password",
+  "https://mernstudentapp-1.onrender.com/api/auth/reset-password",
   { token, newPassword }
 );
 setMessage(res.data.message)

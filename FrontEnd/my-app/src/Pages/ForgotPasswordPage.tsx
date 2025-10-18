@@ -13,7 +13,7 @@ const ForgotPasswordPage = () => {
 
     try {
       const res = await axios.post<{ message: string }>(
-  "http://localhost:5000/api/auth/request-reset",
+  "https://mernstudentapp-1.onrender.com/api/auth/request-reset",
   { email }
 );
 setMessage(res.data.message);
