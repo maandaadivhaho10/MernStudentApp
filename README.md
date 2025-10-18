@@ -1,120 +1,203 @@
-# FullStack Student CRUD App
-
 This repo contains a TypeScript Node.js + Express backend (MongoDB via Mongoose) and a React + TypeScript frontend.
 
-## Tech
+🧠 Tech Stack
 
-- Backend: Node, Express, TypeScript, Mongoose, CORS, dotenv
-- Frontend: React, TypeScript, Vite, axios, react-router-dom, Tailwind CSS v4
+Backend: Node.js, Express, TypeScript, Mongoose, JWT, bcrypt, Nodemailer, Role-Based Access Control (RBAC), CORS, dotenv
 
-## Data model (Student)
+Frontend: React, TypeScript, Vite, axios, react-router-dom, Tailwind CSS v4
 
-```
+📘 Data Models
+Student
 {
-  _id: string,
-  name: string,
-  studentId: string,
-  program: string,
-  year: number,
-  email: string,
-  createdAt: Date,
-  updatedAt: Date
+"\_id": "string",
+"name": "string",
+"studentId": "string",
+"program": "string",
+"year": "number",
+"email": "string",
+"createdAt": "Date",
+"updatedAt": "Date"
 }
-```
 
-## Backend
+User (for Authentication & Roles)
+{
+"\_id": "string",
+"name": "string",
+"email": "string",
+"password": "string (hashed)",
+"role": "string (e.g., admin | staff | viewer)",
+"createdAt": "Date"
+}
 
-Location: `BackEnd/`
+⚙️ Backend
 
-### Prerequisites
+Location: BackEnd/
 
-- Node 18+
-- MongoDB connection string (Atlas or local)
+Prerequisites
 
-### Environment
+Node 18+
 
-Create `BackEnd/.env`:
+MongoDB connection string (local or Atlas)
 
-```
+Environment Variables
+
+Create .env in BackEnd/:
+
 PORT=5000
 MONGO_URI=mongodb+srv://<user>:<pass>@<cluster>/<db>?retryWrites=true&w=majority&appName=<app>
-```
 
-### Install & run
+# JWT
 
-```bash
-# from repo root
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRES_IN=1d
+
+# Email (Nodemailer)
+
+EMAIL_SERVICE=gmail
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_email_app_password
+
+Install & Run
 cd BackEnd
 npm install
 npm run dev
-# Server at http://localhost:5000
-```
 
-### REST API
+# Server runs at http://localhost:5000
 
-Base URL: `http://localhost:5000/students`
+🔐 Authentication & Role-Based Access
+Base URL
 
-- GET `/students` — list students
-  - Optional query: `page`, `limit`, `q`, `program`, `year`, `sort`
-- GET `/students/:id` — get by id
-- POST `/students` — create
-- PUT `/students/:id` — update
-- DELETE `/students/:id` — delete
+http://localhost:5000/auth
 
-#### Example requests
+Method Endpoint Description Access
+POST /auth/register Register a new user and send welcome email Public
+POST /auth/login Login user and return JWT Public
+GET /auth/me Get logged-in user info Protected
+POST /auth/forgot-password Send password reset email Public
+POST /auth/reset-password/:token Reset password using email token Public
+Example Requests
+Register User
+curl -X POST http://localhost:5000/auth/register \
+ -H "Content-Type: application/json" \
+ -d '{
+"name": "Admin User",
+"email": "admin@example.com",
+"password": "123456",
+"role": "admin"
+}'
 
-```bash
-# List
-curl "http://localhost:5000/students?page=1&limit=10&q=jane&sort=-createdAt"
+📩 On successful registration, an email is sent to the user’s inbox via Nodemailer confirming the account creation.
 
-# Create
-curl -X POST http://localhost:5000/students \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name":"Jane Doe",
-    "studentId":"S123",
-    "program":"CS",
-    "year":2,
-    "email":"jane@example.com"
-  }'
+Login
+curl -X POST http://localhost:5000/auth/login \
+ -H "Content-Type: application/json" \
+ -d '{"email":"admin@example.com","password":"123456"}'
 
-# Update
-curl -X PUT http://localhost:5000/students/<id> \
-  -H "Content-Type: application/json" \
-  -d '{"program":"Software Engineering"}'
+Response:
 
-# Delete
-curl -X DELETE http://localhost:5000/students/<id>
-```
+{
+"token": "<JWT_TOKEN>",
+"user": {
+"\_id": "string",
+"name": "Admin User",
+"email": "admin@example.com",
+"role": "admin"
+}
+}
 
-## Frontend
+🎓 Student Routes
 
-Location: `FrontEnd/my-app/`
+Base URL: http://localhost:5000/students
 
-### Install & run
+Method Endpoint Description Role Access
+GET /students List all students admin, staff
+GET /students/:id Get single student admin, staff
+POST /students Create new student admin only
+PUT /students/:id Update student admin, staff
+DELETE /students/:id Delete student admin only
+Example:
+curl -H "Authorization: Bearer <JWT_TOKEN>" \
+"http://localhost:5000/students"
 
-```bash
-# new terminal
+🧩 Middleware
+authMiddleware
+
+Validates JWT from the Authorization header.
+
+Adds decoded user info to req.user.
+
+authorizeRoles
+
+Restricts access to certain endpoints based on user role.
+
+Example:
+
+router.post("/students", authMiddleware, authorizeRoles("admin"), createStudent);
+
+📧 Email Notifications (Nodemailer)
+
+Nodemailer is used to send automated emails such as:
+
+✅ Welcome email after registration
+
+🔑 Password reset email with secure token
+
+⚠️ Admin alerts when a new user registers (optional)
+
+Example setup (utils/sendEmail.ts):
+
+import nodemailer from "nodemailer";
+
+export const sendEmail = async (to: string, subject: string, html: string) => {
+const transporter = nodemailer.createTransport({
+service: process.env.EMAIL_SERVICE,
+auth: {
+user: process.env.EMAIL_USER,
+pass: process.env.EMAIL_PASS,
+},
+});
+
+await transporter.sendMail({
+from: `"Student Management" <${process.env.EMAIL_USER}>`,
+to,
+subject,
+html,
+});
+};
+
+🎨 Frontend
+
+Location: FrontEnd/my-app/
+
+Install & Run
 cd FrontEnd/my-app
 npm install
 npm run dev
-# App at http://localhost:5173
-```
 
-The frontend expects the backend at `http://localhost:5000`. Update `src/api/studentApi.ts` to change base URL if needed.
+# App runs at http://localhost:5173
 
-### Features
+Frontend Features
 
-- Create, list, view detail, edit, delete students
-- Client-side validation and nicer UI with Tailwind
+Login and logout with JWT
 
-## Notes
+Protected routes using React Router
 
-- Types are defined on both backend (Mongoose model) and frontend (`src/types.ts`).
-- Meaningful status codes and simple validation are implemented (including ObjectId checks, Mongoose validators).
-- Basic responsive layout and accessibility-friendly form labels.
+Role-based UI (admins can delete, staff cannot)
 
-## Repo workflow
+CRUD operations with search and filters
 
-- Make small, focused commits.
-- Open a PR for the final submission summarizing changes.
+Email input validation and error handling
+
+Responsive Tailwind UI
+
+🧠 Notes
+
+Passwords hashed using bcrypt
+
+Tokens handled using jsonwebtoken
+
+Emails handled using Nodemailer
+
+Role-based control enforced both in backend routes and frontend UI
+
+Mongoose schema validation with proper HTTP status codes

@@ -3,25 +3,27 @@ import Home from "./Pages/Home";
 import LoginPage from "./LoginPage";
 import LogoutPage from "./LogoutPage";
 import PrivateRoute from "./components/PrivateRoute";
+import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
+import ResetPasswordPage from "./Pages/ResetPasswordPage";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Login page stays public */}
-        <Route path="/login" element={<LoginPage />} />
+        {/* Public routes */}
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
-        {/* Home page is now protected */}
+        {/* Protected routes */}
         <Route
-          path="/"
+          path="/home"
           element={
             <PrivateRoute>
               <Home />
             </PrivateRoute>
           }
         />
-
-        {/* Logout page is protected */}
         <Route
           path="/logout"
           element={

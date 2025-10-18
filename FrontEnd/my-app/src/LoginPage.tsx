@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "./store/authStore";
 
 const LoginPage = () => {
@@ -21,9 +21,13 @@ const LoginPage = () => {
       } else {
         await register(name, email, password);
       }
-      navigate("/");
+      navigate("/home");
     } catch {
-      setModalMessage(isLogin ? "Login failed. Please check your credentials." : "Registration failed. Please try again.");
+      setModalMessage(
+        isLogin
+          ? "Login failed. Please check your credentials."
+          : "Registration failed. Please try again."
+      );
       setIsModalOpen(true);
     }
   };
@@ -37,41 +41,57 @@ const LoginPage = () => {
     <div className="min-h-screen bg-gray-50 flex justify-center items-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-80 text-center">
         <h2 className="text-2xl font-bold mb-4">
-          {isLogin ? 'Login' : 'Register'}
+          {isLogin ? "Login" : "Register"}
         </h2>
         <form onSubmit={handleSubmit}>
           {!isLogin && (
             <input
               placeholder="Name"
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               className="w-full p-3 mb-4 border border-gray-300 rounded-md"
             />
           )}
           <input
             placeholder="Email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full p-3 mb-4 border border-gray-300 rounded-md"
           />
           <input
             placeholder="Password"
             type="password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full p-3 mb-4 border border-gray-300 rounded-md"
           />
-          <button type="submit" className="w-full p-3 bg-blue-600 text-white rounded-md hover:bg-blue-500 cursor-pointer mb-4">
-            {isLogin ? 'Login' : 'Register'}
+          <button
+            type="submit"
+            className="w-full p-3 bg-blue-600 text-white rounded-md hover:bg-blue-500 cursor-pointer mb-3"
+          >
+            {isLogin ? "Login" : "Register"}
           </button>
+
+          {isLogin && (
+            <Link
+              to="/forgot-password"
+              className="block text-sm text-blue-600 hover:text-blue-800 mb-4"
+            >
+              Forgot password?
+            </Link>
+          )}
         </form>
+
         <button
           onClick={() => setIsLogin(!isLogin)}
           className="w-full p-2 text-blue-600 bg-transparent hover:text-blue-800 cursor-pointer text-sm"
         >
-          {isLogin ? 'Need an account? Register' : 'Already have an account? Login'}
+          {isLogin
+            ? "Need an account? Register"
+            : "Already have an account? Login"}
         </button>
       </div>
+
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-8 rounded-lg shadow-xl w-80 text-center">
@@ -89,7 +109,5 @@ const LoginPage = () => {
     </div>
   );
 };
-
-
 
 export default LoginPage;
